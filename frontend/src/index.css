@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@theme {
+  --font-family-sans: 'Inter', 'sans-serif';
+  --font-family-mono: 'JetBrains Mono', 'monospace';
+  --color-bg-primary: #0B0F14;
+  --color-bg-secondary: #121821;
+  --color-text-primary: #E6EDF3;
+  --color-text-secondary: #9BA7B4;
+  --color-accent: #4F46E5;
+  --color-accent-hover: #4338CA;
+  --color-status-success: #22C55E;
+  --color-status-error: #EF4444;
+  --color-status-warning: #F59E0B;
+  --color-border: #1F2937;
+}
+
+body {
+  @apply font-sans;
+}
+.code {
+  @apply font-mono;
+}
