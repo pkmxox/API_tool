@@ -1,150 +1,208 @@
-Here is the updated `project.md` file. I have overridden the previous version with a detailed "State of the Union" based on the file analysis. This version serves as a precise context document for the next phase of development.
+# NexDev Project Context
 
-```markdown
-# NexDev — Project Context & Execution Guide
+Version: 1.2
+Last Updated: 2026-04-04
+Status: Planning aligned, implementation not started
 
-**Version:** 1.1.0  
-**Last Updated:** 02-04-2026  
-**Status:** Phase 1 — Infrastructure Complete | UI Build Pending
+## 1. Project Situation
 
----
+NexDev is being built under time pressure with investor urgency.
 
-## 1. 🚦 Current State Summary
+The main strategy is:
 
-The project has successfully completed the "Scaffolding Phase".
-*   **Infrastructure:** 100% (Vite, Tailwind, ESLint, Fonts, Paths)
-*   **Design System:** 100% (Tokens configured, Variables set)
-*   **Business Logic:** 5% (Basic Zustand store skeleton exists)
-*   **UI Components:** 0% (All component files are empty shells)
+- ship a believable MVP fast
+- keep scope small
+- avoid building non-essential features early
+- use planning discipline so multiple AI helpers do not create confusion
 
-**Immediate Blocker:** The application renders a blank screen because `App.jsx` and all layout components are empty.
+## 2. Team Operating Model
 
----
+There are multiple AI roles involved in the wider workflow:
 
-## 2. 🧱 Tech Stack (Verified Installed)
+- executive
+- mentor
+- research
+- overseer/debugger
 
-| Layer | Technology | Version | Notes |
-|-------|-----------|---------|-------|
-| **Framework** | React | 19.2.4 | Latest version |
-| **Build** | Vite | 8.0.1 | React Compiler enabled |
-| **Styling** | Tailwind CSS | 4.2.2 | PostCSS + Autoprefixer active |
-| **State** | Zustand | 5.0.12 | Installed, basic store created |
-| **Icons** | Lucide React | 1.7.0 | Ready for import |
-| **Fonts** | Inter + JetBrains | 5.2.8 | Imported in `main.jsx` |
+This project chat is the overseer/debugger lane.
 
----
+The overseer role is to:
 
-## 3. 🎨 Design System (Locked)
+- inspect the repository
+- identify blockers
+- explain issues in simple words
+- help sequence implementation
+- keep project notes updated when requested
 
-### Color Tokens (Tailwind Config)
-**Do not use arbitrary values (e.g., `bg-gray-500`). Use only these:**
+The developer writes the code directly.
 
-| Token | Hex | Usage |
-|-------|-----|-------|
-| `bg-bg-primary` | `#0B0F14` | Main Canvas |
-| `bg-bg-secondary` | `#121821` | Panels / Cards |
-| `text-text-primary` | `#E6EDF3` | Headings |
-| `text-text-secondary` | `#9BA7B4` | Body text |
-| `bg-accent` | `#4F46E5` | Primary Buttons |
-| `bg-accent-hover` | `#4338CA` | Hover State |
-| `border-border` | `#1F2937` | Dividers |
+Important rule:
 
-### Method Colors
-*   GET: `text-method-get`
-*   POST: `text-method-post`
-*   PUT: `text-method-put`
-*   PATCH: `text-method-patch`
-*   DELETE: `text-method-delete`
+- no files should be edited by the overseer unless the developer explicitly asks
 
-### Layout Constants
-*   **Sidebar:** `240px`
-*   **Context Panel:** `320px`
-*   **Header:** `56px`
-*   **Spacing:** `p-4` / `gap-4` (Standard)
+## 3. Verified Repository State
 
----
+### Root
 
-## 4. 📂 Project Structure (Actual State)
+Current top-level project folders/files include:
 
-The file structure exists but is largely unimplemented.
+- `backend/`
+- `frontend/`
+- `plan.md`
+- `project.md`
 
-### ✅ Configured & Ready
-*   `tailwind.config.js` — Colors, fonts, content paths set.
-*   `src/index.css` — Tailwind directives & font config.
-*   `src/main.jsx` — Renders `<App />`, imports fonts.
-*   `vite.config.js` — React compiler plugins active.
+### Backend
 
-### ⚠️ Implemented (Partial)
-*   `src/store/requestStore.js`
-    *   Contains: `method`, `url`, `isLoading`, `response`.
-    *   Actions: `setMethod`, `setUrl`, `sendRequest` (basic fetch logic exists).
+- `backend/` is currently empty
 
-### 🛑 Empty Shells (Priority Build List)
-*   **Layouts:**
-    *   `src/app/AppShell.jsx` (Root 3-panel flex)
-    *   `src/layouts/Sidebar.jsx` (Left panel)
-    *   `src/layouts/MainPane.jsx` (Center workspace)
-    *   `src/layouts/TitleBar.jsx` (Top header)
-*   **Request Editor:**
-    *   `src/modules/request/editor/RequestEditor.jsx`
-    *   `src/modules/request/editor/MethodSelector.jsx`
-    *   `src/modules/request/editor/UrlInput.jsx`
-*   **Shared/UI:**
-    *   `src/shared/Button.jsx`
-    *   `src/shared/Input.jsx`
-*   **Root:**
-    *   `src/App.jsx` (Currently empty fragment `<> </>`)
+### Frontend
 
----
+The frontend has a large source tree, but most files are still placeholders.
 
-## 5. 🚧 Execution Roadmap
+Only a small number of files currently contain actual code:
 
-### Phase 1: Layout Foundation (Days 1-2)
-**Goal:** Render the 3-panel application shell.
+- `frontend/src/main.jsx`
+- `frontend/src/App.jsx`
+- `frontend/src/index.css`
+- `frontend/src/App.css`
+- `frontend/src/constants/layout.js`
+- `frontend/src/store/requestStore.js`
 
-1.  **App.jsx**: Import and render `AppShell`.
-2.  **AppShell.jsx**: Create the flex container.
-    *   `flex h-screen bg-bg-primary text-text-primary`
-    *   Children: `<Sidebar />`, `<MainPane />`, `<ContextPanel />`.
-3.  **Sidebar.jsx**: Implement fixed left panel (`w-[240px]`).
-    *   Add Logo placeholder.
-    *   Add "New Request" button placeholder.
-4.  **MainPane.jsx**: Implement flexible center (`flex-1`).
-    *   Prepare slot for request editor.
-5.  **ContextPanel.jsx**: Implement fixed right panel (`w-[320px]`).
-    *   Placeholder for "Explanation/AI" feature.
+There are also static assets present in `frontend/src/assets/`.
 
-### Phase 2: Request Input (Day 3)
-**Goal:** Allow user to input URL and Method.
+## 4. Current Technical Reality
 
-1.  **MethodSelector.jsx**: Dropdown for GET/POST/etc. Use method colors.
-2.  **UrlInput.jsx**: Text field connected to `requestStore.url`.
-3.  **SendButton.jsx**: Button wired to `requestStore.sendRequest`.
+### What is already working
 
-### Phase 3: Response & Polish (Days 4-5)
-**Goal:** Display results.
+- React + Vite are set up
+- Tailwind is configured
+- fonts are imported in `frontend/src/main.jsx`
+- layout constants exist
+- a basic Zustand request store exists
+- ESLint runs successfully
 
-1.  **ResponseViewer.jsx**: JSON viewer component.
-2.  **StatusBadge.jsx**: Display status code (200, 404, etc.).
-3.  **Utils**: Finish `formatJson.js` for pretty-printing.
+### What is not working yet
 
----
+- the app still renders a blank screen
+- the main UI shell is not implemented
+- request editor UI is not implemented
+- response UI is not implemented
+- backend is not implemented
 
-## 6. ⚠️ Development Rules (Strict)
+## 5. Primary Known Problems
 
-1.  **No New Libraries:** Use only what is installed (Zustand, Lucide, Tailwind).
-2.  **Token Enforcement:** Only use colors defined in Section 3.
-3.  **Component Size:** Max 150 lines. Split logic into hooks if larger.
-4.  **State Access:** Use Zustand hooks (`useRequestStore`) directly in components. Do not prop-drill.
-5.  **Font Usage:** UI uses `font-sans`. Code/JSON uses `font-mono`.
+### Blank screen
 
----
+`frontend/src/App.jsx` currently returns an empty fragment, so nothing visible is rendered.
 
-## 7. 🧠 AI Instruction Prompt
+### Empty shell files
 
-When generating code for this project:
-1.  **Check Structure:** Does the file already exist? If so, fill the empty shell. If not, create it in the specific folder defined in Section 4.
-2.  **Verify Imports:** Import icons from `lucide-react`. Import store from `src/store/...`.
-3.  **Styling:** Apply classes strictly from the Design System in Section 3.
-4.  **Logic:** Connect UI inputs to the existing `requestStore` setters (`setUrl`, `setMethod`).
-```
+Core shell files are still empty, including:
+
+- `frontend/src/app/AppShell.jsx`
+- `frontend/src/layouts/Sidebar.jsx`
+- `frontend/src/layouts/MainPane.jsx`
+
+### Request store bug
+
+In `frontend/src/store/requestStore.js`:
+
+- loading starts before the request
+- loading is cleared on error
+- loading is not cleared on success
+
+There is also a response parsing limitation:
+
+- the request logic always calls `res.json()`
+- this will fail for valid non-JSON responses
+
+## 6. Validation Results So Far
+
+### Lint
+
+- `npm run lint` in `frontend/` passed
+
+### Build
+
+- `npm run build` in `frontend/` did not complete successfully in this environment
+
+Observed build environment issues:
+
+- Tailwind native oxide binding load failure
+- Vite reported `spawn EPERM`
+
+Conclusion:
+
+- code linting is currently okay
+- production build verification is still unresolved from this environment
+
+## 7. MVP Scope
+
+The first investor-facing MVP should only prove the core use case.
+
+### MVP must do
+
+1. show the app shell
+2. let the user choose a method
+3. let the user enter a URL
+4. send the request
+5. show the response
+
+### MVP should not try to finish yet
+
+- collections
+- environment management
+- history
+- scripts
+- AI assistant behavior
+- request saving
+- advanced tabs
+- backend services
+- deep polish
+
+## 8. Planned Next Work
+
+The next implementation session should focus only on Phase 1.
+
+### Phase 1 target
+
+Render a visible shell and remove the blank screen.
+
+### Recommended file order
+
+1. `frontend/src/App.jsx`
+2. `frontend/src/app/AppShell.jsx`
+3. `frontend/src/layouts/Sidebar.jsx`
+4. `frontend/src/layouts/MainPane.jsx`
+5. right-side placeholder panel
+
+Do not mix Phase 2 features into that work.
+
+## 9. End-of-Day Record For 2026-04-04
+
+Today's progress was planning and verification, not implementation.
+
+Completed today:
+
+- reviewed project structure
+- confirmed backend is empty
+- confirmed frontend is mostly scaffolding
+- identified blank-screen cause
+- identified request store behavior and bug
+- verified lint
+- documented build verification issue
+- aligned the working rules for AI coordination
+- aligned the project around a fast MVP strategy
+
+Not completed today:
+
+- shell implementation
+- request editor
+- response viewer
+- backend work
+
+## 10. Communication Rule
+
+When sharing status with other AIs, use the repository reality above first.
+
+If another AI suggests work that conflicts with the actual current files or the MVP-first plan, that suggestion should be treated as lower priority.

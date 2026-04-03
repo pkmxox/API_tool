@@ -1,56 +1,52 @@
 # NexDev Execution Plan
 
-Version: 1.0
-Date: 2026-04-03
-Status: Coordination plan for Phase 1 and immediate Phase 2 handoff
+Version: 1.1
+Date: 2026-04-04
+Status: Phase 1 queued for implementation
 
 ## 1. Purpose
 
-This document is the single source of truth for all external AI contributors.
+This file is the working coordination plan for the project.
 
 Its goals are:
 
-1. Keep every AI inside the correct phase.
-2. Stop AIs from sending code when only planning/review is requested.
-3. Make all reports consistent with the real repository state.
-4. Give the operator a clean sequence to follow without confusion.
+1. Keep the project moving toward a fast MVP.
+2. Keep all AI contributors aligned on the same repository reality.
+3. Prevent phase mixing and unnecessary features.
+4. Give the developer a clear next action at any point.
 
-## 2. Current Verified State
+## 2. Current Verified Repository State
 
-Verified directly from the repository at `frontend/`:
+Verified directly from the repository:
 
-### Phase 0
+- `backend/` exists but is currently empty.
+- The frontend structure is large, but most source files are still placeholders.
+- Only a small set of frontend files currently contain real code.
 
-Phase 0 is complete.
+### Non-empty core source/config files
 
-Confirmed:
+- `frontend/src/main.jsx`
+- `frontend/src/App.jsx`
+- `frontend/src/index.css`
+- `frontend/src/App.css`
+- `frontend/src/constants/layout.js`
+- `frontend/src/store/requestStore.js`
 
-- React + Vite + Tailwind are installed.
-- Fonts are wired in `frontend/src/main.jsx`.
-- Tailwind design tokens exist in `frontend/tailwind.config.js`.
-- Global styles exist in `frontend/src/index.css`.
-- Zustand request store exists in `frontend/src/store/requestStore.js`.
+### Important repo reality
 
-### Actual Blockers
+- `frontend/src/App.jsx` is not empty, but it returns an empty fragment.
+- Most files under `frontend/src/app`, `frontend/src/layouts`, `frontend/src/modules`, `frontend/src/shared`, `frontend/src/hooks`, `frontend/src/services`, `frontend/src/store`, and `frontend/src/utils` are still zero-byte shells.
 
-The app is blank because key UI files are empty.
+## 3. Verified Findings
 
-Verified empty files:
+### Current blocker
 
-- `frontend/src/app/AppShell.jsx`
-- `frontend/src/app/App.jsx`
-- `frontend/src/layouts/MainPane.jsx`
-- `frontend/src/layouts/Sidebar.jsx`
-- `frontend/src/modules/request/editor/RequestEditor.jsx`
-- `frontend/src/modules/request/editor/MethodSelector.jsx`
-- `frontend/src/modules/request/editor/UrlInput.jsx`
-- `frontend/src/modules/request/editor/SendButton.jsx`
+The app renders blank because:
 
-Important note:
+- `frontend/src/App.jsx` returns `<> </>`
+- the shell/layout files are still empty
 
-- `frontend/src/App.jsx` is not empty, but currently returns an empty fragment, so the app still renders nothing.
-
-### Existing Store Reality
+### Existing working logic
 
 `frontend/src/store/requestStore.js` already contains:
 
@@ -62,312 +58,211 @@ Important note:
 - `setUrl`
 - `sendRequest`
 
-Known issue already present in store:
+### Known store issues
 
-- `sendRequest` sets `isLoading: true`
-- On error it resets loading
-- On success it does **not** reset `isLoading` to `false`
+In `sendRequest`:
 
-This is a real implementation detail and must be considered in Phase 2.
+- `isLoading` is set to `true` before the request
+- on error, loading is reset
+- on success, loading is not reset to `false`
+- the response is always parsed with `res.json()`, which will fail for non-JSON responses
 
-## 3. Phase Boundaries
+### Checks completed
 
-These boundaries are strict.
+- `npm run lint` in `frontend/` passes
+- `npm run build` in `frontend/` failed in this environment while loading Vite/Tailwind native dependencies
 
-### Phase 1 Goal
+Build failure notes:
 
-Render a visible application shell so the blank screen is removed.
+- Tailwind oxide native binding failed to load
+- Vite also reported `spawn EPERM`
 
-Phase 1 success means:
+This means lint was verified, but production build status was not cleanly confirmed from this environment.
 
-- App renders
-- Left sidebar renders
-- Center main pane renders
-- Right context/assistant panel renders
-- No blank screen remains
+## 4. Project Constraints
 
-### Phase 2 Goal
+These are now strict working rules.
 
-Make the minimum API request flow usable.
+### Developer rule
 
-Phase 2 success means:
+The developer writes the code.
 
-1. User selects HTTP method
-2. User enters URL
-3. User clicks Send
-4. Response is visible on screen
+### Overseer rule
 
-### Forbidden Phase Mixing
+This assistant does not edit files unless explicitly told to do so.
 
-Do not pull Phase 2 work into Phase 1 unless explicitly approved.
+Default responsibilities:
 
-Examples:
+- inspect
+- identify problems
+- simplify next steps
+- coordinate AI reports
+- keep planning documents accurate when requested
 
-- Do not add request sending during Phase 1
-- Do not add headers/body/auth/history/tabs polish during Phase 1
-- Do not redesign the UI during Phase 1 or Phase 2
+### Delivery rule
 
-## 4. Locked Scope by Phase
+The project must optimize for a fast investor-ready MVP, not completeness.
 
-### Phase 1 Allowed
+That means:
 
-- Wire `frontend/src/App.jsx` to render the shell
-- Implement `frontend/src/app/AppShell.jsx`
-- Implement left layout shell
-- Implement center layout shell
-- Implement right context/assistant shell
-- Use existing design tokens only
-- Add placeholders only where needed
+- visible progress first
+- stable demo flow first
+- low-risk scope first
+- no side quests
 
-### Phase 1 Not Allowed
+## 5. MVP Priority
 
-- Request body editor
-- Headers editor
-- Authentication
-- History
-- AI explanation logic
-- Major store refactors
-- Visual redesign
-- New libraries
+The MVP goal is to show a real, usable API tool quickly.
 
-### Phase 2 Allowed
+### Must-have order
 
-- `RequestEditor`
-- `MethodSelector`
-- `UrlInput`
-- `SendButton`
-- Basic response output
-- Minimal store bug fix if required for send flow
+1. Render the app shell
+2. Let the user choose a method
+3. Let the user enter a URL
+4. Let the user send a request
+5. Show response body and basic status
 
-### Phase 2 Not Allowed
+### Not required for the first demo
 
-- Headers tab
-- Auth tab
-- Body editor
-- Save request
-- Collections logic
-- History logic
-- Fancy JSON viewer
-- Animations/polish beyond basic usability
+- collections
+- environment editor
+- history
+- scripts
+- body editor
+- auth
+- save flow
+- AI assistant logic
+- backend implementation
+- advanced polish
 
-## 5. Design System Rules
+## 6. Phase Boundaries
 
-All AIs must respect the existing tokens.
+### Phase 1
 
-Use only the existing color system from `frontend/tailwind.config.js`:
+Goal:
 
-- `bg-bg-primary`
-- `bg-bg-secondary`
-- `text-text-primary`
-- `text-text-secondary`
-- `bg-accent`
-- `bg-accent-hover`
-- `border-border`
-- `text-method-get`
-- `text-method-post`
-- `text-method-put`
-- `text-method-patch`
-- `text-method-delete`
+Remove the blank screen and render a visible shell.
 
-Use these layout constants:
+Success means:
 
-- Sidebar width: `240px`
-- Right panel width: `320px`
-- Top bar height: `56px`
+- app loads
+- sidebar is visible
+- main pane is visible
+- right-side panel is visible
+- no blank screen remains
 
-Font usage:
+### Phase 2
 
-- UI labels: `font-sans`
-- URL / JSON / method tokens: `font-mono` only where appropriate
+Goal:
 
-## 6. File Ownership and Build Order
+Make the minimum request flow usable.
 
-This order is mandatory.
+Success means:
 
-### Phase 1 Build Order
+1. choose HTTP method
+2. enter URL
+3. click Send
+4. show response
+
+### Phase discipline
+
+Do not pull later features into the current phase.
+
+Examples to avoid during Phase 1:
+
+- request body logic
+- auth logic
+- tabs polish
+- history
+- collections
+- AI features
+- redesign work
+
+## 7. Next Implementation Order
+
+This is the current approved build order.
+
+### Phase 1 file order
 
 1. `frontend/src/App.jsx`
 2. `frontend/src/app/AppShell.jsx`
 3. `frontend/src/layouts/Sidebar.jsx`
 4. `frontend/src/layouts/MainPane.jsx`
-5. Create or wire a right-side panel component for the shell
+5. right-side shell panel
 
 Note:
 
-There is no verified `frontend/src/layouts/ContextPanel.jsx` in the current file list. If a right-side shell panel is needed, it must be created intentionally and referenced from `AppShell.jsx`.
+There is no verified `ContextPanel.jsx` in the current source tree. If a right panel is needed, it must be created intentionally or another existing file must be used for that role.
 
-### Phase 2 Build Order
+### Phase 2 file order
 
 1. `frontend/src/modules/request/editor/RequestEditor.jsx`
 2. `frontend/src/modules/request/editor/MethodSelector.jsx`
 3. `frontend/src/modules/request/editor/UrlInput.jsx`
 4. `frontend/src/modules/request/editor/SendButton.jsx`
-5. Mount request editor into `frontend/src/layouts/MainPane.jsx`
-6. Render raw response below the editor
-7. Fix `requestStore` loading state only if needed for the MVP flow
+5. mount editor into `MainPane.jsx`
+6. render response output below it
+7. fix request store loading behavior if needed
 
-## 7. Strict Output Contract for External AIs
+## 8. AI Coordination Contract
 
-This section is mandatory. Share it exactly when you ask another AI for help.
+This section should guide the other AIs.
 
-### Universal Instruction
+### Universal instruction
 
-You are not allowed to send code unless explicitly asked for code.
-
-For this task, respond with:
+Unless code is explicitly requested, external AIs should return:
 
 - analysis
-- implementation plan
-- risk list
-- file-by-file action list
-- validation checklist
+- phase understanding
+- ordered action list
+- risks
+- validation steps
 
-Do **not** include:
+They should not return:
 
-- code blocks
-- JSX
-- JavaScript
-- pseudocode
-- patch format
-- "copy-paste code"
-- sample component implementations
-- inline snippets longer than one line
+- full code
+- large snippets
+- patch blocks
+- unnecessary architecture rewrites
+- extra libraries
 
-If you ignore this rule, the response is invalid and will not be used.
+### Priority order when AI advice conflicts
 
-### Required Response Format
+1. verified repository state
+2. this `plan.md`
+3. MVP speed
+4. phase discipline
+5. optional improvements
 
-Every AI must reply using exactly these sections:
+## 9. End-of-Day Summary For 2026-04-04
 
-1. Phase Understanding
-2. Files To Touch
-3. Ordered Task List
-4. Risks / Conflicts
-5. Validation Checklist
-6. Stop Point
+What happened today:
 
-### Additional Restrictions
+- repository structure was inspected
+- backend was confirmed empty
+- frontend source map was checked
+- blank-screen root cause was identified
+- request store was reviewed
+- lint was verified
+- build issue was observed in the current environment
+- team operating rules were clarified
+- investor urgency was added as a top-level planning constraint
 
-- Use only the real repository paths listed in this document.
-- Do not invent files unless clearly labeled as a necessary new file.
-- Do not assume files are implemented if this document says they are empty.
-- Do not suggest new libraries.
-- Do not suggest refactoring the architecture.
-- Keep recommendations inside the current phase only.
+What did not happen today:
 
-## 8. AI-Specific Instructions
+- no source files were implemented
+- no UI files were filled
+- no request flow was built
+- no backend work was started
 
-Use these prompt constraints when talking to each AI.
+## 10. Immediate Next Step
 
-### For Claude
+The next coding session should start with Phase 1 only:
 
-You previously violated the instruction by returning code. Do not return code in this round.
+1. make `App.jsx` render the shell
+2. fill `AppShell.jsx`
+3. fill `Sidebar.jsx`
+4. fill `MainPane.jsx`
+5. add or wire a simple right-side placeholder panel
 
-You must act as a planning and architecture reviewer only.
-
-Required behavior:
-
-- no code
-- no snippets
-- no component bodies
-- no placeholder JSX
-- no "copy-paste" sections
-- only structured planning output
-
-Focus on:
-
-- shell architecture
-- file dependencies
-- phase discipline
-- integration risks
-
-### For GPT
-
-Act as execution manager only.
-
-Focus on:
-
-- scope control
-- atomic task ordering
-- time budgeting
-- must-have versus later
-
-Do not provide implementation code.
-
-### For Gemini
-
-Act as technical reviewer only.
-
-Focus on:
-
-- layout integrity
-- token consistency
-- viewport behavior
-- edge-case warnings
-
-Do not provide implementation code.
-
-## 9. Consolidated Execution Plan
-
-This is the plan that should govern real implementation.
-
-### Phase 1
-
-Objective:
-
-Remove blank screen by rendering a stable 3-panel shell.
-
-Deliverables:
-
-- `frontend/src/App.jsx` renders the shell entry
-- `frontend/src/app/AppShell.jsx` renders the 3-panel layout
-- left panel visible
-- center panel visible
-- right panel visible
-- `h-screen` and `overflow-hidden` applied at shell level
-
-Validation:
-
-- app loads without blank screen
-- no horizontal viewport overflow
-- background uses project tokens
-
-### Phase 2
-
-Objective:
-
-Enable the MVP request flow.
-
-Deliverables:
-
-- method selector works
-- URL input works
-- Send button works
-- response shows below the request controls
-- loading state is handled correctly
-
-Validation URL:
-
-- `https://jsonplaceholder.typicode.com/todos/1`
-
-Validation steps:
-
-1. choose `GET`
-2. paste validation URL
-3. click Send
-4. response appears
-5. button does not remain permanently stuck in loading state
-
-## 10. Decision Rules
-
-When there is conflict between AI reports, use this priority:
-
-1. Verified repository state
-2. This `plan.md`
-3. Scope discipline
-4. Speed to working MVP
-5. Nice-to-have suggestions
-
-If an AI recommendation conflicts with the verified repository, discard that recommendation.
-
-
+Stop there once the blank screen is gone and the shell is visible.
