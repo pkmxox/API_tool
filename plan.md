@@ -1,8 +1,8 @@
 # NexDev Execution Plan
 
-Version: 1.1
+Version: 1.2
 Date: 2026-04-04
-Status: Phase 1 queued for implementation
+Status: Phase 1 started, shell scaffold in place
 
 ## 1. Purpose
 
@@ -17,13 +17,14 @@ Its goals are:
 
 ## 2. Current Verified Repository State
 
-Verified directly from the repository:
+Verified directly from the repository on 2026-04-04:
 
-- `backend/` exists but is currently empty.
-- The frontend structure is large, but most source files are still placeholders.
-- Only a small set of frontend files currently contain real code.
+- `backend/` exists and is still empty.
+- `frontend/` is the only active implementation area.
+- The frontend now has a visible shell scaffold started.
+- Most source files are still placeholders.
 
-### Non-empty core source/config files
+### Non-empty source and config files that matter right now
 
 - `frontend/src/main.jsx`
 - `frontend/src/App.jsx`
@@ -31,24 +32,57 @@ Verified directly from the repository:
 - `frontend/src/App.css`
 - `frontend/src/constants/layout.js`
 - `frontend/src/store/requestStore.js`
+- `frontend/src/app/AppShell.jsx`
+- `frontend/src/layouts/Sidebar.jsx`
+- `frontend/src/layouts/MainPane.jsx`
+- `frontend/src/layouts/RightSideBar.jsx`
+- `frontend/src/modules/request/editor/RequestEditor.jsx`
 
 ### Important repo reality
 
-- `frontend/src/App.jsx` is not empty, but it returns an empty fragment.
-- Most files under `frontend/src/app`, `frontend/src/layouts`, `frontend/src/modules`, `frontend/src/shared`, `frontend/src/hooks`, `frontend/src/services`, `frontend/src/store`, and `frontend/src/utils` are still zero-byte shells.
+- `App.jsx` now renders `AppShell`.
+- `AppShell.jsx` mounts left, center, and right layout panels.
+- `Sidebar.jsx`, `MainPane.jsx`, and `RightSideBar.jsx` are no longer empty.
+- `RequestEditor.jsx` now exists as a placeholder UI block.
+- Most files under `modules`, `shared`, `hooks`, `services`, `store`, and `utils` are still zero-byte shells.
 
 ## 3. Verified Findings
 
-### Current blocker
+### Progress made today
 
-The app renders blank because:
+The blank-screen blocker was addressed in code.
 
-- `frontend/src/App.jsx` returns `<> </>`
-- the shell/layout files are still empty
+Current shell path:
+
+1. `frontend/src/main.jsx` renders `App`
+2. `frontend/src/App.jsx` renders `AppShell`
+3. `frontend/src/app/AppShell.jsx` renders:
+   - `Sidebar`
+   - `MainPane`
+   - `RightSideBar`
+
+This means Phase 1 has started and the app should now show a visible layout instead of a blank screen.
+
+### Current shell status
+
+What now exists:
+
+- left sidebar placeholder
+- main workspace placeholder
+- right-side AI/context placeholder
+- request editor placeholder section inside the main pane
+
+What is still missing:
+
+- real request controls
+- response viewer
+- proper workspace header behavior
+- reusable shared components
+- real right panel behavior
 
 ### Existing working logic
 
-`frontend/src/store/requestStore.js` already contains:
+`frontend/src/store/requestStore.js` still contains the only meaningful request logic:
 
 - `method`
 - `url`
@@ -67,21 +101,29 @@ In `sendRequest`:
 - on success, loading is not reset to `false`
 - the response is always parsed with `res.json()`, which will fail for non-JSON responses
 
-### Checks completed
+## 4. Validation
 
-- `npm run lint` in `frontend/` passes
-- `npm run build` in `frontend/` failed in this environment while loading Vite/Tailwind native dependencies
+### Lint
 
-Build failure notes:
+- `npm run lint` in `frontend/` passed on 2026-04-04 after the new shell files were added
+
+### Build
+
+- `npm run build` in `frontend/` still failed in this environment
+
+Observed environment-side build issues:
 
 - Tailwind oxide native binding failed to load
-- Vite also reported `spawn EPERM`
+- Vite reported `spawn EPERM`
 
-This means lint was verified, but production build status was not cleanly confirmed from this environment.
+Conclusion:
 
-## 4. Project Constraints
+- lint is currently clean
+- build is still not verified from this environment
 
-These are now strict working rules.
+## 5. Project Constraints
+
+These remain strict working rules.
 
 ### Developer rule
 
@@ -90,14 +132,6 @@ The developer writes the code.
 ### Overseer rule
 
 This assistant does not edit files unless explicitly told to do so.
-
-Default responsibilities:
-
-- inspect
-- identify problems
-- simplify next steps
-- coordinate AI reports
-- keep planning documents accurate when requested
 
 ### Delivery rule
 
@@ -110,7 +144,7 @@ That means:
 - low-risk scope first
 - no side quests
 
-## 5. MVP Priority
+## 6. MVP Priority
 
 The MVP goal is to show a real, usable API tool quickly.
 
@@ -135,7 +169,7 @@ The MVP goal is to show a real, usable API tool quickly.
 - backend implementation
 - advanced polish
 
-## 6. Phase Boundaries
+## 7. Phase Boundaries
 
 ### Phase 1
 
@@ -143,13 +177,18 @@ Goal:
 
 Remove the blank screen and render a visible shell.
 
-Success means:
+Phase 1 current state:
 
-- app loads
-- sidebar is visible
-- main pane is visible
-- right-side panel is visible
-- no blank screen remains
+- started
+- major shell files created
+- placeholder content visible
+- basic structure achieved
+
+Phase 1 not fully complete yet because:
+
+- the layout still needs a more intentional request workspace composition
+- request input controls are not wired
+- right panel is only a placeholder
 
 ### Phase 2
 
@@ -168,43 +207,42 @@ Success means:
 
 Do not pull later features into the current phase.
 
-Examples to avoid during Phase 1:
+Examples to avoid:
 
-- request body logic
-- auth logic
-- tabs polish
-- history
 - collections
-- AI features
-- redesign work
+- environment logic
+- AI logic
+- save flow
+- auth
+- history
+- redesign detours
 
-## 7. Next Implementation Order
+## 8. Next Implementation Order
 
-This is the current approved build order.
+This is the current approved build order after today's progress.
 
-### Phase 1 file order
+### Immediate next files
 
-1. `frontend/src/App.jsx`
-2. `frontend/src/app/AppShell.jsx`
-3. `frontend/src/layouts/Sidebar.jsx`
-4. `frontend/src/layouts/MainPane.jsx`
-5. right-side shell panel
+1. `frontend/src/modules/request/editor/MethodSelector.jsx`
+2. `frontend/src/modules/request/editor/UrlInput.jsx`
+3. `frontend/src/modules/request/editor/SendButton.jsx`
+4. `frontend/src/modules/request/editor/RequestEditor.jsx`
+5. `frontend/src/layouts/MainPane.jsx`
 
-Note:
+### Immediate next objective
 
-There is no verified `ContextPanel.jsx` in the current source tree. If a right panel is needed, it must be created intentionally or another existing file must be used for that role.
+Turn the request placeholder into a usable request bar:
 
-### Phase 2 file order
+- select method
+- type URL
+- click Send
 
-1. `frontend/src/modules/request/editor/RequestEditor.jsx`
-2. `frontend/src/modules/request/editor/MethodSelector.jsx`
-3. `frontend/src/modules/request/editor/UrlInput.jsx`
-4. `frontend/src/modules/request/editor/SendButton.jsx`
-5. mount editor into `MainPane.jsx`
-6. render response output below it
-7. fix request store loading behavior if needed
+After that:
 
-## 8. AI Coordination Contract
+- show response output below the editor
+- then fix the store loading behavior if it causes UI issues
+
+## 9. AI Coordination Contract
 
 This section should guide the other AIs.
 
@@ -220,11 +258,11 @@ Unless code is explicitly requested, external AIs should return:
 
 They should not return:
 
-- full code
-- large snippets
-- patch blocks
-- unnecessary architecture rewrites
+- large architecture rewrites
+- feature creep
 - extra libraries
+- unrelated backend plans
+- broad redesign suggestions
 
 ### Priority order when AI advice conflicts
 
@@ -234,35 +272,46 @@ They should not return:
 4. phase discipline
 5. optional improvements
 
-## 9. End-of-Day Summary For 2026-04-04
+## 10. End-of-Day Summary For 2026-04-04
 
 What happened today:
 
-- repository structure was inspected
+- repository structure was rechecked
 - backend was confirmed empty
-- frontend source map was checked
-- blank-screen root cause was identified
-- request store was reviewed
-- lint was verified
-- build issue was observed in the current environment
-- team operating rules were clarified
-- investor urgency was added as a top-level planning constraint
+- frontend source map was rechecked
+- Phase 1 implementation started
+- `App.jsx` was wired to render `AppShell`
+- `AppShell.jsx` was created with three layout regions
+- `Sidebar.jsx` was filled with a basic placeholder layout
+- `MainPane.jsx` was filled with a workspace placeholder
+- `RightSideBar.jsx` was added as a new placeholder file
+- `RequestEditor.jsx` was filled with basic placeholder sections
+- lint was verified again and passed
+- build issue remained unresolved in this environment
 
 What did not happen today:
 
-- no source files were implemented
-- no UI files were filled
-- no request flow was built
+- no method selector was implemented
+- no URL input was implemented
+- no Send button was implemented
+- no response viewer was implemented
 - no backend work was started
+- no request store bug was fixed yet
 
-## 10. Immediate Next Step
+## 11. Immediate Next Step
 
-The next coding session should start with Phase 1 only:
+The next coding session should stay narrow:
 
-1. make `App.jsx` render the shell
-2. fill `AppShell.jsx`
-3. fill `Sidebar.jsx`
-4. fill `MainPane.jsx`
-5. add or wire a simple right-side placeholder panel
+1. build `MethodSelector.jsx`
+2. build `UrlInput.jsx`
+3. build `SendButton.jsx`
+4. mount them inside `RequestEditor.jsx`
+5. connect them to `requestStore`
 
-Stop there once the blank screen is gone and the shell is visible.
+Stop before touching:
+
+- collections
+- AI behavior
+- environments
+- history
+- backend
